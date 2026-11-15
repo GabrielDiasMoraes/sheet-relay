@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.0
+- First stable release: everything in English, generic diagrams, English app names, npm via Trusted Publishing, multi-arch Docker images.
+
 ## 0.1.1
 - Everything in English (code comments, docs, diagrams); generic diagrams; English app names.
 

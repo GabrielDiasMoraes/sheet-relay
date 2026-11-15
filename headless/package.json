@@ -1,2 +1,2 @@
-{ "name": "sheet-relay-headless", "version": "0.1.1", "type": "module", "private": true,
+{ "name": "sheet-relay-headless", "version": "1.0.0", "type": "module", "private": true,
   "dependencies": { "playwright": "1.52.0" } }
