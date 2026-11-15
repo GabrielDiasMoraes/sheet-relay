@@ -54,7 +54,7 @@ Then, in Foundry:
    `https://github.com/GabrielDiasMoraes/sheet-relay/releases/latest/download/module.json`
 2. In your world, enable **Sheet Relay**.
 3. Create the relay user: name = `RELAY_USER` (default `Relay`), role **Assistant GM**, password = `RELAY_PASSWORD`. Create an Actor folder for the player characters (default name `Players`) and put the sheets in it.
-4. *Configure Settings → Sheet Relay*: **Relay URL** `ws://sheet:8787` (the compose service name; use `ws://localhost:8787` if the relay is not in the same Docker network), **Relay secret** = your `RELAY_SECRET`, **Players folder** = your folder name.
+4. *Configure Settings → Sheet Relay*: **Relay URL** `ws://sheet:8787` (the compose service name; use `ws://localhost:8787` if the relay is not in the same Docker network), **Relay secret** = your `RELAY_SECRET`, **Relay user** = the user from step 3 (default `Relay`), **Players folder** = your folder name. Save and reload the world: the module connects as soon as the relay user is logged in. See [Configuration reference](#configuration-reference) for every option.
 5. Open `http://localhost:8787/ficha/` (the path `/ficha/` is the default `BASE_PATH`) and pick a Foundry user. Accounts without an app password enter directly (the GM's trust decision); set one with `game.modules.get("sheet-relay").api.setPassword(userId, "password")` in the Foundry console, or users can change it in the app. The relay user is hidden from the app's user list.
 
 The headless service logs the relay user in to Foundry at `FOUNDRY_URL` (see the comments in `docker/docker-compose.yml`). The image can also be built locally: `docker build -t sheet-relay .` (build args: `SYSTEMS`, `BASE_PATH`).
@@ -91,6 +91,39 @@ bash scripts/publish-app.sh dnd --local "<Foundry Data folder>" --serve   # type
 ```
 
 `publish-app.sh` takes the app name from `systems/<id>/system.json` (`dnd`, `fallout`, `avatar`) or the system id. Foundry module settings are the same as above (`Relay URL` `ws://localhost:8787`). Full walkthrough: [docs/install.md](docs/install.md).
+
+## Configuration reference
+
+**Foundry module** (*Configure Settings → Sheet Relay*, world scope; the module only connects when the Foundry user named **Relay user** is logged in):
+
+| Setting | Default | What it does |
+|---|---|---|
+| Relay URL (WebSocket) | `ws://localhost:8787` | Where the module reaches the relay, as seen **from the browser that runs the relay user** (the headless container). Docker compose: `ws://sheet:8787`. |
+| Relay secret | empty | Must equal the relay's `RELAY_SECRET`. Empty = no secret (not recommended). |
+| Foundry user that connects to the relay | `Relay` | Exact Foundry user name of the relay account (role Assistant GM). It is hidden from the app. |
+| Players' characters folder | `Players` | Actor folder (and subfolders) the GM sees in the app; players always see their own characters. |
+| Users hidden from the app | `Helper` | Comma-separated Foundry user names that cannot sign in to the app. |
+| Module language | Auto | Language of chat messages sent by the module (Auto follows Foundry's language). |
+
+**Relay / app container** (`ghcr.io/gabrieldiasmoraes/sheet-relay`, or `npx @gaabrielmooraes/sheet-relay serve`):
+
+| Variable | Default | What it does |
+|---|---|---|
+| `SYSTEM` | `dnd5e` | App to serve: `dnd5e`, `fallout` or `legends` (must match your world's game system). |
+| `RELAY_SECRET` | none | Shared secret checked when the module connects. Set it (compose requires it). |
+| `PORT` / `HOST` | `8787` / `127.0.0.1` (`0.0.0.0` in the image) | Listen address. |
+| `BASE_PATH` | `/ficha` | URL path the app is served under (fixed at build time in the image). |
+| `TRUST_PROXY` | `0` (`1` in the image) | Trust `X-Forwarded-For` from a reverse proxy for rate limits. |
+
+**Headless relay user** (`ghcr.io/gabrieldiasmoraes/sheet-headless`, or `npx @gaabrielmooraes/sheet-relay headless`):
+
+| Variable | What it does |
+|---|---|
+| `FOUNDRY_URL` | Foundry address the headless browser opens. Keep `http://localhost:<port>` (a secure context, which the module needs) and map the real host with `FOUNDRY_HOST`. |
+| `FOUNDRY_HOST` | Real host name of your Foundry server (compose service `foundry` if you use the profile). |
+| `FOUNDRY_USER` / `FOUNDRY_PASSWORD` | The relay user's Foundry name and password. |
+
+**Troubleshooting:** `curl http://localhost:8787/api/status` shows `503 Foundry disconnected` until the module is connected. If it stays that way: the relay user is not logged in (check the headless logs), **Relay user** does not match the Foundry user name, **Relay URL** is wrong from the headless browser's point of view, or **Relay secret** differs from `RELAY_SECRET`.
 
 ## Language
 

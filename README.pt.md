@@ -33,3 +33,5 @@ Defina um `RELAY_SECRET` longo no relay e no módulo; use um proxy reverso com H
 ## Outro sistema, licenças, contribuir
 
 Criar um plugin: [docs/create-system.md](docs/create-system.md). Código sob MIT; o catálogo do D&D parafraseia o SRD 5.2 (CC-BY-4.0), veja [NOTICE](NOTICE). Marcas pertencem aos donos; projeto não oficial. Antes de contribuir, rode `bash scripts/check.sh`.
+
+Referência completa de configuração (opções do módulo, variáveis do relay e do headless, solução de problemas): veja a seção *Configuration reference* do [README](README.md).
