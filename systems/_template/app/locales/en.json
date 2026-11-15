@@ -1,0 +1,10 @@
+{
+ "template.loginTitle": "Sheet",
+ "template.hp": "HP {value}/{max}",
+ "template.sheet": "Sheet",
+ "template.back": "Back",
+ "template.name": "Name",
+ "template.rename": "Rename",
+ "template.roll": "Roll d20",
+ "template.sheets": "‹ Sheets"
+}

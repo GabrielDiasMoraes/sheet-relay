@@ -1,0 +1,12 @@
+{
+  "id": "_template",
+  "name": "Example system",
+  "app": "template",
+  "instance": "template",
+  "container": "foundryvtt-template",
+  "domain": "sheets.example.org",
+  "relayUser": "Relay",
+  "web": "sheet-web-template",
+  "mcpPort": 3009,
+  "license": null
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Foundry Sheet — D&D 5.5e",
+  "short_name": "D&D sheet",
+  "description": "D&D (2024 rules) character sheets for Foundry VTT on your phone.",
+  "start_url": "/ficha/",
+  "scope": "/ficha/",
+  "display": "standalone",
+  "background_color": "#170807",
+  "theme_color": "#170807",
+  "icons": [
+    { "src": "/ficha/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/ficha/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/ficha/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

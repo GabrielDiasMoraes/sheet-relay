@@ -1,0 +1,43 @@
+# Sheet Relay, one world. Copy .env.example to .env, fill it in, then:
+#   docker compose up -d                          (relay + app + headless user)
+#   docker compose --profile foundry up -d        (also runs a Foundry server)
+#   docker compose --profile caddy up -d          (also puts HTTPS in front, needs DOMAIN)
+services:
+  sheet:
+    image: ghcr.io/gabrieldiasmoraes/sheet-relay:latest
+    restart: unless-stopped
+    environment:
+      SYSTEM: ${SYSTEM:-dnd5e}            # dnd5e | fallout | legends (the Foundry system id of your world)
+      RELAY_SECRET: ${RELAY_SECRET:?set RELAY_SECRET in .env}
+    ports: ["127.0.0.1:${PORT:-8787}:8787"]   # app at http://localhost:8787/ficha/ ; use the caddy profile for HTTPS
+
+  headless:   # keeps the "relay user" logged in to your world so the module stays connected
+    image: ghcr.io/gabrieldiasmoraes/sheet-headless:latest
+    restart: unless-stopped
+    depends_on: [sheet]
+    environment:
+      FOUNDRY_URL: http://localhost:30000       # "localhost" keeps the browser in a secure context (the module needs crypto.subtle)...
+      FOUNDRY_HOST: ${FOUNDRY_HOST:-foundry}    # ...and this is the real host name of your Foundry server (service name with the foundry profile)
+      FOUNDRY_USER: ${RELAY_USER:-Relay}
+      FOUNDRY_PASSWORD: ${RELAY_PASSWORD:?set RELAY_PASSWORD in .env}
+
+  foundry:
+    profiles: [foundry]
+    image: felddy/foundryvtt:13
+    restart: unless-stopped
+    environment:
+      FOUNDRY_USERNAME: ${FOUNDRY_USERNAME:-}
+      FOUNDRY_PASSWORD: ${FOUNDRY_ACCOUNT_PASSWORD:-}
+      FOUNDRY_ADMIN_KEY: ${FOUNDRY_ADMIN_KEY:-}
+    volumes: [foundry-data:/data]
+    ports: ["30000:30000"]
+
+  caddy:
+    profiles: [caddy]
+    image: caddy:2
+    restart: unless-stopped
+    environment: { DOMAIN: "${DOMAIN:?set DOMAIN in .env}" }
+    volumes: ["./Caddyfile:/etc/caddy/Caddyfile:ro", caddy-data:/data]
+    ports: ["80:80", "443:443"]
+
+volumes: { foundry-data: {}, caddy-data: {} }

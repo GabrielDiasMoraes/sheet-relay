@@ -1,0 +1,12 @@
+{
+  "id": "legends",
+  "name": "Avatar Legends",
+  "app": "avatar",
+  "instance": "avatar",
+  "container": "foundryvtt-avatar",
+  "domain": "sheets.example.org",
+  "relayUser": "Relay",
+  "web": "sheet-web-avatar",
+  "mcpPort": 3001,
+  "license": null
+}

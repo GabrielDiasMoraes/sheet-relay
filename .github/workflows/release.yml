@@ -1,0 +1,73 @@
+name: Release
+# Tag vX.Y.Z -> GitHub Release (module.json + module.zip for the Foundry package manager), npm package, Docker images (GHCR).
+on:
+  push: { tags: ["v*"] }
+permissions: { contents: write, packages: write, id-token: write }
+jobs:
+  module:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: relay/package-lock.json }
+      - run: npm ci --prefix relay
+      - run: bash scripts/check.sh --rapido
+      - id: v
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+      - run: bash module/build-zip.sh "${{ steps.v.outputs.version }}" "${{ github.repository }}"
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/module.json
+            dist/module.zip
+          generate_release_notes: true
+
+  npm:
+    runs-on: ubuntu-latest
+    needs: module
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, registry-url: "https://registry.npmjs.org" }
+      - name: Install app dependencies
+        run: for d in systems/*/app; do case "$d" in *_template*) continue;; esac; (cd "$d" && npm ci --no-audit --no-fund); done
+      - run: npm ci --prefix relay
+      - run: node scripts/prepare-npm.mjs
+      - run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version --allow-same-version
+        working-directory: relay
+      - run: npm i -g npm@latest # trusted publishing (OIDC) needs npm >= 11.5.1
+      - run: npm publish --access public # no token: npm trusts this workflow (id-token: write)
+        working-directory: relay
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: module
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with: { registry: ghcr.io, username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}" }
+      - id: n
+        run: echo "owner=$(echo '${{ github.repository_owner }}' | tr 'A-Z' 'a-z')" >> "$GITHUB_OUTPUT"
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ steps.n.outputs.owner }}/sheet-relay:latest
+            ghcr.io/${{ steps.n.outputs.owner }}/sheet-relay:${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - uses: docker/build-push-action@v6
+        with:
+          context: headless
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ steps.n.outputs.owner }}/sheet-headless:latest
+            ghcr.io/${{ steps.n.outputs.owner }}/sheet-headless:${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

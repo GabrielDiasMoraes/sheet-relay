@@ -1,0 +1,12 @@
+{
+  "id": "dnd5e",
+  "name": "Dungeons & Dragons 5e",
+  "app": "dnd",
+  "instance": "dnd",
+  "container": "foundryvtt-dnd",
+  "domain": "sheets.example.org",
+  "relayUser": "Relay",
+  "web": "sheet-web-dnd",
+  "mcpPort": 3002,
+  "license": null
+}

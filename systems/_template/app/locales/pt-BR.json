@@ -1,0 +1,10 @@
+{
+ "template.loginTitle": "Ficha",
+ "template.hp": "PV {value}/{max}",
+ "template.sheet": "Ficha",
+ "template.back": "Voltar",
+ "template.name": "Nome",
+ "template.rename": "Renomear",
+ "template.roll": "Rolar d20",
+ "template.sheets": "‹ Fichas"
+}

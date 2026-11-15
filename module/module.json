@@ -1,0 +1,11 @@
+{
+  "id": "sheet-relay",
+  "title": "Sheet Relay",
+  "description": "Companion character sheets: connects a Foundry user to a self-hosted relay (WebSocket) that serves a mobile-friendly web app for players and the GM. Ships a plugin for D&D 5e (SRD 5.2); plugins for other systems can be added.",
+  "version": "0.1.1",
+  "compatibility": { "minimum": "13", "verified": "13" },
+  "authors": [{ "name": "GabrielDiasMoraes", "url": "https://github.com/GabrielDiasMoraes" }],
+  "license": "MIT",
+  "esmodules": ["scripts/main.js"],
+  "languages": []
+}

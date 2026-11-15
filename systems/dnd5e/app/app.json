@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "D&D sheet",
+    "slug": "sheet-dnd",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "web": { "favicon": "./assets/favicon.png" },
+    "experiments": { "baseUrl": "/ficha", "tsconfigPaths": false }
+  }
+}

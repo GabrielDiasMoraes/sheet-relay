@@ -1,0 +1,12 @@
+{
+  "id": "fallout",
+  "name": "Fallout (2d20)",
+  "app": "fallout",
+  "instance": "fallout",
+  "container": "foundryvtt-fallout",
+  "domain": "sheets.example.org",
+  "relayUser": "Relay",
+  "web": "sheet-web-fallout",
+  "mcpPort": 3000,
+  "license": null
+}

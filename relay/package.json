@@ -1,0 +1,52 @@
+{
+  "name": "@gaabrielmooraes/sheet-relay",
+  "version": "0.1.1",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js && node test-static.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "description": "Relay + web app that serve Foundry VTT character sheets to a companion app (players and GM). Pairs with the sheet-relay Foundry module.",
+  "license": "MIT",
+  "bin": {
+    "sheet-relay": "bin/sheet-relay.mjs"
+  },
+  "files": [
+    "server.js",
+    "static.js",
+    "headless.mjs",
+    "bin",
+    "apps",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrielDiasMoraes/sheet-relay.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "foundry-vtt",
+    "foundryvtt",
+    "character-sheet",
+    "rpg"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "peerDependencies": {
+    "playwright": ">=1.45"
+  },
+  "peerDependenciesMeta": {
+    "playwright": {
+      "optional": true
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "Sheet (example)",
+    "slug": "sheet-template",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "experiments": { "baseUrl": "/ficha", "tsconfigPaths": false }
+  }
+}
