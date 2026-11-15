@@ -36,7 +36,7 @@ services:
     profiles: [caddy]
     image: caddy:2
     restart: unless-stopped
-    environment: { DOMAIN: "${DOMAIN:?set DOMAIN in .env}" }
+    environment: { DOMAIN: "${DOMAIN:-localhost}" }
     volumes: ["./Caddyfile:/etc/caddy/Caddyfile:ro", caddy-data:/data]
     ports: ["80:80", "443:443"]
 
